@@ -29,7 +29,7 @@ console.log(saveButtonEL);
 saveButtonEL.on("click", function (event) {
   event.preventDefault();
   var parentEL = $(this).parent().children().eq(1).val();
-  localStorage.setItem("parentEL", JSON.stringify(parentEL));
+  localStorage.setItem("parentEL", parentEL);
 
 });
 
