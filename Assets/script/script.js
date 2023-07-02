@@ -9,7 +9,6 @@ $(function () {
   var currentTime = dayjs().hour();
   // Dom traversal variables
   var rootEL = $("#root");
-  var saveButtonEL = $(":button");
   var currentTimeEL = $("#currentDay");
 
   //Array of time blocks
@@ -25,15 +24,17 @@ $(function () {
     dayjs().hour(21),
   ];
 
-console.log(saveButtonEL);
-saveButtonEL.on("click", function (event) {
+
+  
+// Getting and setting local storage items
+$("hour-9 .description").val(localStorage.getItem("hour9"));;
+
+$('.saveBtn').on("click", function (event) {
   event.preventDefault();
-  var parentEL = $(this).parent().children().eq(1).val();
-  localStorage.setItem("parentEL", parentEL);
+  
+  localStorage.setItem("hour9", hour9);
 
 });
-
-
 
   //Sets current date to Calendar header.
   currentTimeEL.text(todaysDate);
