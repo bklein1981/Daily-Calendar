@@ -3,24 +3,58 @@
 // in the html.
 
 $(function () {
-var rootEL = $("#root");
-var saveButtonEL = $(":button")
-var currentTimeEL = $("#currentDay");
-var timeArray = [
-  dayjs().hour(9), 
-  dayjs().hour(10), 
-  dayjs().hour(11), 
-  dayjs().hour(12),
-  dayjs().hour(13), 
-  dayjs().hour(14), 
-  dayjs().hour(15), 
-  dayjs().hour(16), 
-  dayjs().hour(17),
-];
+ 
+  // Time variables
+  var todaysDate = dayjs().format("dddd, MMMM D");
+  var currentTime = dayjs().hour();
+  // Dom traversal variables
+  var rootEL = $("#root");
+  var saveButtonEL = $(":button");
+  var currentTimeEL = $("#currentDay");
 
-$(rootEL).children().eq(0).children().eq(0).text(timeArray[8].format("hA"));
+  //Array of time blocks
+  var timeArray = [
+    dayjs().hour(9),
+    dayjs().hour(10),
+    dayjs().hour(11),
+    dayjs().hour(12),
+    dayjs().hour(13),
+    dayjs().hour(14),
+    dayjs().hour(15),
+    dayjs().hour(16),
+    dayjs().hour(21),
+  ];
 
-console.log(rootEL);
+console.log(saveButtonEL);
+saveButtonEL.on("click", function (event) {
+  event.preventDefault();
+  var parentEL = $(this).parent().children().eq(1).val();
+  localStorage.setItem("parentEL", JSON.stringify(parentEL));
+
+});
+
+
+
+  //Sets current date to Calendar header.
+  currentTimeEL.text(todaysDate);
+
+  //Sets the time blocks in the DOM.
+  for (var i = 0; i < timeArray.length; i++) {
+    $(rootEL).children().eq(i).children().eq(0).text(timeArray[i].format("hA"));
+  }
+
+  //Adjusts the calendar's class to reflect whether past, present, or future.
+  for (var i = 0; i < timeArray.length; i++) {
+    var arrayTime = dayjs(timeArray[i]).format("HH");
+    if (arrayTime < currentTime) {
+     $(rootEL).children(0).eq(i).addClass("past")
+    } else if (arrayTime > currentTime) {
+      $(rootEL).children(0).eq(i).addClass("future")
+    } else {
+      $(rootEL).children(0).eq(i).addClass("present")
+    }
+  }
+
   // TODO: Add a listener for click events on the save button. This code should
   // use the id in the containing time-block as a key to save the user input in
   // local storage. HINT: What does `this` reference in the click listener
@@ -39,14 +73,13 @@ console.log(rootEL);
   // attribute of each time-block be used to do this?
   //
   // TODO: Add code to display the current date in the header of the page.
-  var saveButtonClicked = saveButtonEL.on("click", function () {
-    console.log("save button clicked");
-  });
-  
-  function todaysTime() {
-    var rightNow = dayjs().format("dddd, MMMM D");
-    currentTimeEL.text(rightNow);
-  };
-  
-  todaysTime();
+ 
+  // var saveButtonClicked = saveButtonEL.on("click", function () {
+  //   console.log("save button clicked");
+  // });
+
+
+
+
+
 });
