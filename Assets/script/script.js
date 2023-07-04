@@ -1,16 +1,12 @@
-// Wrap all code that interacts with the DOM in a call to jQuery to ensure that
-// the code isn't run until the browser has finished rendering all the elements
-// in the html.
-
 $(function () {
- 
   // Time variables
   var todaysDate = dayjs().format("dddd, MMMM D");
   var currentTime = dayjs().hour();
   // Dom traversal variables
   var rootEL = $("#root");
   var currentTimeEL = $("#currentDay");
-
+  var hour9El = document.getElementById("hour-9");
+  console.log(hour9El.getAttribute("id"));
   //Array of time blocks
   var timeArray = [
     dayjs().hour(9),
@@ -21,20 +17,24 @@ $(function () {
     dayjs().hour(14),
     dayjs().hour(15),
     dayjs().hour(16),
-    dayjs().hour(21),
+    dayjs().hour(17),
   ];
 
+  //Event listener for the save button.
+  $(".saveBtn").on("click", function (event) {
+    event.preventDefault();
+    var userInput = $(this).parents().children().eq(1).val();
+    //localStorage.setItem( );
+    var key = $(this).parent().attr("id");
+    localStorage.setItem(key, userInput);
+  });
 
-  
-// Getting and setting local storage items
-$("hour-9 .description").val(localStorage.getItem("hour9"));;
-
-$('.saveBtn').on("click", function (event) {
-  event.preventDefault();
-  
-  localStorage.setItem("hour9", hour9);
-
-});
+  //load from local storage
+  $(".time-block").each(function () {
+    var key = $(this).attr("id");
+    var savedInput = localStorage.getItem(key);
+    $(this).children().eq(1).val(savedInput);
+  });
 
   //Sets current date to Calendar header.
   currentTimeEL.text(todaysDate);
@@ -48,39 +48,11 @@ $('.saveBtn').on("click", function (event) {
   for (var i = 0; i < timeArray.length; i++) {
     var arrayTime = dayjs(timeArray[i]).format("HH");
     if (arrayTime < currentTime) {
-     $(rootEL).children(0).eq(i).addClass("past")
+      $(rootEL).children(0).eq(i).addClass("past");
     } else if (arrayTime > currentTime) {
-      $(rootEL).children(0).eq(i).addClass("future")
+      $(rootEL).children(0).eq(i).addClass("future");
     } else {
-      $(rootEL).children(0).eq(i).addClass("present")
+      $(rootEL).children(0).eq(i).addClass("present");
     }
   }
-
-  // TODO: Add a listener for click events on the save button. This code should
-  // use the id in the containing time-block as a key to save the user input in
-  // local storage. HINT: What does `this` reference in the click listener
-  // function? How can DOM traversal be used to get the "hour-x" id of the
-  // time-block containing the button that was clicked? How might the id be
-  // useful when saving the description in local storage?
-  //
-  // TODO: Add code to apply the past, present, or future class to each time
-  // block by comparing the id to the current hour. HINTS: How can the id
-  // attribute of each time-block be used to conditionally add or remove the
-  // past, present, and future classes? How can Day.js be used to get the
-  // current hour in 24-hour time?
-  //
-  // TODO: Add code to get any user input that was saved in localStorage and set
-  // the values of the corresponding textarea elements. HINT: How can the id
-  // attribute of each time-block be used to do this?
-  //
-  // TODO: Add code to display the current date in the header of the page.
- 
-  // var saveButtonClicked = saveButtonEL.on("click", function () {
-  //   console.log("save button clicked");
-  // });
-
-
-
-
-
 });
